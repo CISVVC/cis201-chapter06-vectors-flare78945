@@ -1,7 +1,7 @@
 /** File: 
  ** Author: Minhquang Phillip Tran
- ** Email: phillip_ttran_98@yahoo.com
- ** Description: 
+ ** Email: phillip_tran_98@yahoo.com
+ ** Description: This program takes user input to simulate a bank account with deposits and withdrawals.
 **/
 
 #include<iostream>
@@ -14,21 +14,21 @@ using namespace std;
 class Bank
 {
 	public:
-		Bank();
-		Bank(int a, double b, long double c, string d);
-		int Last_Entry();
-		string Get_Transaction_Type();
-		double Value();
-		void Entry();
-    double Intrest_Average();
-    double Intrest_Daily();
-		void Print();
+		Bank(); // Default Constructor
+		Bank(int a, double b, long double c, string d); // Constructor with inputed values
+		int Last_Entry(); // Gets the value of the last entry via vector size
+		string Get_Transaction_Type(); // Gets description type from user; Only Deposit or Withdrawal
+		double Value(); // Gets value of the Deposit/Withdrawal
+		void Entry(); // Adds a new entry
+    		double Interest_Average(); // Calculates the interest earned by the average balance of the account
+    		double Interest_Daily(); // Calculates the interest earned by the latest balance of the account
+		void Print(); // Prints the account statement
 	private:
 		vector<int> day;
 		vector<long double> balance;
 		vector<long double> transaction;
 		vector<string> description;
-    double interest;
+    		double interest;
 };
 
 Bank::Bank()
@@ -37,15 +37,14 @@ Bank::Bank()
 	balance.push_back(0.0);
 	transaction.resize(1);
 	description.push_back("");
-  interest = 0.0;
+  	interest = 0.0;
 }
 
 Bank::Bank(int a, double b, long double c, string d)
 {
-  day.push_back(a);
+  	day.push_back(a);
 	interest = b;
-  balance.push_back(c);
-	transaction.resize(1);
+ 	balance.push_back(c);
 	description.push_back(d);
 }
 
@@ -84,75 +83,71 @@ double Bank::Value()
 
 void Bank::Entry()
 {
-	//day.push_back(day[day.size() - 1] + 1);
-  description.push_back(Get_Transaction_Type());
-  transaction.push_back(Value());
-  if (description[description.size() - 1] == "Deposit of: ")
-  {
-    balance.push_back(balance[balance.size() - 1] + transaction[transaction.size() - 1]);
-  }
-  else if (description[description.size() - 1] == "Withdrawal of: ")
-  {
-    balance.push_back(balance[balance.size() - 1] - transaction[transaction.size() - 1]);
-    if (balance[balance.size() - 1] < 0.0)
-    {
-      day.pop_back();
-      balance.pop_back();
-      description.pop_back();
-      transaction.pop_back();
-      cout << "This transaction can not be completed due to inadequete funds and will be voided." << endl;
-    }
-  }
-  string a;
-  while (a != "y" && a != "Y" && a != "n" && a != "N")
-  {
-    cout << "Is it a new day? (Y/N) ";
-    cin >> a;
-  }
-  if (a == "y" || a == "Y")
-  {
-    day.push_back(day[day.size() - 1] + 1);
-  }
+	day.push_back(day[day.size() - 1] + 1);
+  	description.push_back(Get_Transaction_Type());
+  	transaction.push_back(Value());
+  	if (description[description.size() - 1] == "Deposit of: ")
+  	{
+    		balance.push_back(balance[balance.size() - 1] + transaction[transaction.size() - 1]);
+  	}
+  	else if (description[description.size() - 1] == "Withdrawal of: ")
+  	{
+    		balance.push_back(balance[balance.size() - 1] - transaction[transaction.size() - 1]);
+    		if (balance[balance.size() - 1] < 0.0)
+    		{
+      			day.pop_back();
+      			balance.pop_back();
+      			description.pop_back();
+      			transaction.pop_back();
+      			cout << "This transaction can not be completed due to inadequete funds and will be voided." << endl;
+    		}
+  	}
 }
 
-double Bank::Intrest_Average()
+double Bank::Interest_Average()
 {
-  int i = 0;
-  long double a = 0.0;
-  for (int i = 0; i < balance.size(); i++)
-  {
-    a += balance[i];
-  }
-  a = (a/i) * interest;
-  return a;
+  	int j = 0;
+  	long double a = 0.0;
+  	for (int i = 0; i < balance.size(); i++)
+  	{
+    		a = a + balance[i];
+    		j++;
+  	}
+  	a = (a/j) * interest;
+  	return a;
 }
 
-double Bank::Intrest_Daily()
+double Bank::Interest_Daily()
 {
-  long double a = 0.0;
-  a = balance[balance.size() - 1] * interest;
-  return a;
+  	long double a = 0.0;
+  	a = balance[balance.size() - 1] * interest;
+  	return a;
 }
 
 void Bank::Print()
 {
+	cout << "       Statement" << endl;
+  	cout << "Day Balance  Description" << endl;  
+	cout << setw(3) << day[0] << " $" << setprecision(2) << fixed << balance[0] << " " << description[0] << endl;
 	int size = day.size();
-	for (int i = 0; i < size; i++)
+	for (int i = 1; i < size; i++)
 	{
-    cout << "Day Balance Description" << endl;  
-		cout << setw(3) << day[i] << " $" /*<< setprecision(2) */<< balance[i] << " " << description[i] << endl;
+    		cout << "Day Balance  Description" << endl;  
+		cout << setw(3) << day[i] << " $" << balance[i] << " " << setprecision(2) << fixed << description[i] << "$" << transaction[i - 1] << endl;
 	}
 }
 
 int main()
 {
-  int i = 1;
-	Bank account_1(1, 0.5, 1143.24, "Initial Balance");
-  do 
-  {
-    account_1.Entry();
-    i = account_1.Last_Entry();
-  }
-  while (i < 30);
-  account_1.Print();
+  	int i = 1;
+	Bank account_1(1, 0.005, 1143.24, "Initial Balance");
+  	do 
+  	{
+    		account_1.Entry();
+    		i = account_1.Last_Entry();
+  	}
+  	while (i < 30);
+  	account_1.Print();
+  	cout << "Interest by Average Monthly Balance: " << account_1.Interest_Average() << endl;
+  	cout << "Interest by Daily Balance: " << account_1.Interest_Daily() << endl;
 }
